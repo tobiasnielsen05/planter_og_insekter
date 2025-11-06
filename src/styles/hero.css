@@ -5,7 +5,6 @@ html, body, #app {
 
 /* Baggrundsbillede: læg hero.jpg i src/assets */
 .hero {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   background-image: url(../assests/hero.png);
@@ -15,6 +14,7 @@ html, body, #app {
   position: relative;
   padding: 18px;
   padding-bottom: 0;
+  padding-top: 5px;
   box-sizing: border-box;
   color: #fff ;
   font-family: "Helvetica Neue", Arial, sans-serif;
@@ -26,7 +26,7 @@ html, body, #app {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 6px;
+  padding: 10px;
 }
 
 /* hamburger */
@@ -76,7 +76,7 @@ html, body, #app {
 
 /* mission box near bottom */
 .mission-box {
-  margin: 18px auto 40px;
+  margin: 200px auto 10px;
   width: calc(100% - 36px);
   max-width: 520px;
   background: rgba(255, 255, 255, 0.5);
@@ -84,7 +84,6 @@ html, body, #app {
   padding: 20px;
   border-radius: 12px;
   text-align: center;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
 }
 .mission-box p {
   margin: 0 0 12px;
