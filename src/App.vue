@@ -24,4 +24,8 @@
 <script>
 // importer styling
 import '@/styles/hero.css'
+
+export default {
+  name: 'App'
+}
 </script>
