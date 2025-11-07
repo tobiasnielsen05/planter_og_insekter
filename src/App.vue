@@ -21,7 +21,7 @@
 </template>
 
 
-<script setup>
+<script>
 // importer styling
 import '@/styles/hero.css'
 </script>
