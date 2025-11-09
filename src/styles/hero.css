@@ -1,6 +1,7 @@
 html, body, #app {
   margin: 0;          /* fjern default hvid kant */
   height: 100%;
+  font-family:'Jost', sans-serif;
 }
 
 /* Baggrundsbillede: læg hero.jpg i src/assets */
@@ -108,3 +109,122 @@ html, body, #app {
 
 * { box-sizing: border-box; }
 /* <-- slut tilføjelse --> */
+
+
+@media (max-width: 720px) {
+  .articles { grid-template-columns: 1fr; }
+  .card-image { width: 100%; height: 180px; }
+}
+
+/* article/card styles */
+
+.article-header {
+  font-weight: bold;
+  text-align: center;
+  font-size: 30px;
+}
+
+.card {
+  max-width: 420px;
+  margin: 28px auto;
+  background: #169b6d;
+  color: #fff;
+  padding: 22px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  border: 3px solid #2bbf9a;
+}
+
+.card-title {
+  text-align: center;
+  font-size: 34px;
+  margin-top: auto;
+  margin-bottom: 20px;
+}
+
+.card-image {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.card-image img {
+  max-width: 220px;
+  width: 100%;
+  height: auto;
+}
+
+.card-text {
+  font-size: 16px;
+  line-height: 1.1;
+  margin: 8px 0 12px;
+}
+
+.more-text {
+  margin-top: 12px;
+  font-size: 16px;
+  line-height: 1.1;
+}
+
+/* read-more styles */
+.read-more-row {
+  display: flex;
+  justify-content: flex-end;
+}
+.read-more {
+  color: #fff;
+  text-decoration: underline;
+  font-weight: bold;
+  margin-top: 15px;
+  font-size: 17px;
+}
+
+.more-text p { 
+  color: #f6f6f6; 
+  margin:0; 
+}
+
+.fade-enter-active, .fade-leave-active { 
+  transition: opacity 240ms ease; 
+}
+
+.fade-enter-from, .fade-leave-to { 
+  opacity: 0; 
+}
+
+/* read-less styles */
+.read-less-row { 
+  text-align: center; 
+  margin-top: 30px; 
+}
+
+.read-less { 
+  color: #fff; 
+  text-decoration: underline; 
+  cursor: pointer; 
+  font-weight: 600; 
+  font-size: 17px;
+}
+
+.goal-section {
+  margin: 40px auto;
+  max-width: 900px;
+  padding: 0 18px;
+}
+
+.goal-header {
+  font-weight:normal;
+  text-align: center;
+  font-size: 25px;
+  margin-top: 75px;
+}
+
+.goal-article {
+  background-color: #efefef; /* lys grå baggrund som i vedhæftningen */
+  color: #222; /* mørkere tekst for læsbarhed */
+  max-width: 820px;
+  margin: 18px auto;
+  padding: 22px 26px;
+  border-radius: 10px;
+  line-height: 1.6;
+}
