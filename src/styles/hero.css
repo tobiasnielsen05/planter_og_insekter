@@ -575,3 +575,74 @@ img { max-width: 100%; height: auto; display: block; }
   object-fit: contain;
   display: block;
 }
+
+/*Plante tabel*/
+    .plant-table {
+        width: 100%;
+        text-align: left;
+        box-shadow: #00000017 12px 12px 12px;
+        border-radius: 5px;
+    }
+
+        .plant-table th, .plant-table td {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .plant-table tbody tr:hover {
+            background-color: #A7F3D0;
+            transition: background-color 0.15s ease-in-out;
+        }
+        
+        .color-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            border: 2px solid white;
+        }
+
+        @media screen and (max-width: 768px) {
+            .plant-table, .plant-table thead, .plant-table tbody, .plant-table th, .plant-table td, .plant-table tr {
+                display: block;
+            }
+
+            .plant-table tr {
+                margin-bottom: 15px;
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                background-color: white !important;
+            }
+            .plant-table tr:hover {
+                 background-color: var(--green-light) !important;
+            }
+
+            .plant-table td {
+                border-bottom: 1px solid var(--border-color);
+                position: relative;
+                padding-left: 50%;
+                text-align: right;
+            }
+
+
+            
+            .plant-table td:last-child {
+                border-bottom: none;
+            }
+        }
+
+
+        @media screen and (max-width: 768px) {
+            .plant-table td[data-label="Farve"] {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-align: right;
+            }
+            .plant-table td[data-label="Farve"] .color-circle {
+                margin-left: auto;
+            }
+        }

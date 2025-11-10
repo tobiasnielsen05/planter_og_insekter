@@ -118,6 +118,72 @@
       </div>
     </section>
 
+    <div class="article" style="flex-direction: column;">
+      <div>  
+        <h2>Botanisk Oversigt</h2>
+        <p class="description">En oversigt over udvalgte planters livscyklus, farve, blomstring og lysbehov.</p>
+
+      </div>
+
+        <table class="plant-table">
+
+            <tbody>
+                <tr>
+                  <td><b>Navn</b></td>
+                    <td><b>Livsvarighed</b></td>
+                    <td><b>Farve</b></td>
+                    <td><b>Blomstring</b></td>
+                    <td><b>Lys</b></td>
+                </tr>
+                <tr>
+                    <td>Solsikke</td>
+                    <td>Étårig</td>
+                    <td>
+                        <span class="color-circle" style="background-color: #FBBF24;"></span>
+                    </td>
+                    <td>Jun - Sep</td>
+                    <td>Fuld Sol</td>
+                </tr>
+                <tr>
+                    <td>Lavendel</td>
+                    <td>Flerårig</td>
+                    <td>
+                        <span class="color-circle" style="background-color: #A78BFA;"></span>
+                    </td>
+                    <td>Jul - Aug</td>
+                    <td>Meget Sol</td>
+                </tr>
+                <tr>
+                    <td>Bregne</td>
+                    <td>Flerårig</td>
+                    <td>
+                        <span class="color-circle" style="background-color: #10B981;"></span>
+                    </td>
+                    <td>Ingen</td>
+                    <td>Fuld Skygge</td>
+                </tr>
+                <tr>
+                    <td>Tulipan</td>
+                    <td>Flerårig</td>
+                    <td>
+                        <span class="color-circle" style="background-color: #F87171;"></span>
+                    </td>
+                    <td>Apr - Maj</td>
+                    <td>Halvskygge</td>
+                </tr>
+                <tr>
+                    <td>Mynte</td>
+                    <td>Flerårig</td>
+                    <td>
+                        <span class="color-circle" style="background-color: #E5E7EB;" title="Grå/Hvid"></span>
+                    </td>
+                    <td>Jun - Sep</td>
+                    <td>Sol/Skygge</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
   <!-- Artikler starter her -->
 
 
