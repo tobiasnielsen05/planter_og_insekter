@@ -8,7 +8,7 @@ const router = express.Router();
 // URL: /api/planter/
 router.get("/", async (req, res) => {
     try {
-        const [rows] = await pool.query("SELECT * FROM planteTabel");
+        const [rows] = await pool.query("SELECT * FROM plantetabel");
         res.json(rows); 
     } catch (error) {
         console.error("Fejl ved hentning af planter:", error);
@@ -27,7 +27,7 @@ router.post("/", async (req, res) => {
 
     try {
         const [result] = await pool.query(
-            "INSERT INTO planteTabel (plante_navn, plante_farve, plante_blomstring, plante_lys) VALUES (?, ?, ?, ?)",
+            "INSERT INTO plantetabel (plante_navn, plante_farve, plante_blomstring, plante_lys) VALUES (?, ?, ?, ?)",
             [plante_navn, plante_farve, plante_blomstring, plante_lys]
         );
         
@@ -49,7 +49,7 @@ router.put("/:id", async (req, res) => {
     
     try {
         const [result] = await pool.query(
-            "UPDATE planteTabel SET plante_navn=?, plante_farve=?, plante_blomstring=?, plante_lys=? WHERE plante_id=?",
+            "UPDATE plantetabel SET plante_navn=?, plante_farve=?, plante_blomstring=?, plante_lys=? WHERE plante_id=?",
             [plante_navn, plante_farve, plante_blomstring, plante_lys, id]
         );
         
@@ -70,7 +70,7 @@ router.delete("/:id", async (req, res) => {
     const { id } = req.params;
     
     try {
-        const [result] = await pool.query("DELETE FROM planteTabel WHERE plante_id=?", [id]);
+        const [result] = await pool.query("DELETE FROM plantetabel WHERE plante_id=?", [id]);
         
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: `Plante med ID ${id} ikke fundet til sletning` });

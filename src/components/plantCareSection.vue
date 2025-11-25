@@ -55,7 +55,7 @@ export default {
 
         const fetchPlanter = async () => {
             // Dit API kører på http://localhost:3000
-            const apiUrl = 'http://192.168.1.249:3000/api/planter'; 
+            const apiUrl = 'http://localhost:3000/api/planter'; 
             
             try {
                 const response = await fetch(apiUrl);

@@ -1,100 +1,106 @@
 <template>
-  <div>
-    <h2>Planteliste fra API</h2>
-    
-    <p v-if="loading">Henter data fra serveren...</p>
-    
-    <p v-else-if="error" class="error">{{ error }}</p>
-    
-    <div v-else>
-      <p v-if="planter.length === 0">Ingen planter fundet i databasen.</p>
-      
-      <ul v-else class="plant-list">
-        <li v-for="plante in planter" :key="plante.plante_id" class="plant-item">
-          <h3>{{ plante.plante_navn }}</h3>
-          <p><strong>Farve:</strong> {{ plante.plante_farve }}</p>
-          <p><strong>Blomstring:</strong> {{ plante.plante_blomstring }}</p>
-          <p><strong>Lysbehov:</strong> {{ plante.plante_lys }}</p>
-        </li>
-      </ul>
+  <div class="p-6 max-w-4xl mx-auto">
+    <h2 class="text-3xl font-bold mb-4 text-green-700">Botanisk Oversigt</h2>
+    <p class="mb-8 text-gray-600">En oversigt over udvalgte planters livscyklus, farve, blomstring og lysbehov.</p>
+
+    <!-- Loading State -->
+    <div v-if="isLoading" class="text-center py-10">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto"></div>
+      <p class="mt-4 text-green-600">Henter planter fra serveren...</p>
     </div>
+
+    <!-- Error State -->
+    <div v-else-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+      <strong class="font-bold">FEJL: Kunne ikke hente planter fra API'et!</strong>
+      <p class="block sm:inline">Er serveren startet på port 3000?</p>
+      <p class="text-sm mt-2">Detaljer: {{ error }}</p>
+    </div>
+
+    <!-- Data Table -->
+    <div v-else class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-green-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Navn</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Farve</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Blomstring</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lysbehov</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr v-if="planter.length === 0">
+            <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">Ingen planter fundet. Opret nogle i admin-panelet.</td>
+          </tr>
+          <tr v-for="plante in planter" :key="plante.plante_id" class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ plante.plante_id }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ plante.plante_navn }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ plante.plante_farve }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ plante.plante_blomstring }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ plante.plante_lys }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
   </div>
 </template>
 
 <script>
-// Importer 'onMounted' fra Vue for at køre kode, når komponenten er klar
+// Importer nødvendige funktioner fra Vue
 import { ref, onMounted } from 'vue';
 
 export default {
-  // Komponentens navn
   name: 'PlanteTabel',
-  
-  // Vue 3 Composition API setup
   setup() {
-    // Reactive data state
-    const planter = ref([]); // Holder arrayet af planter
-    const loading = ref(true); // Viser loading-status
-    const error = ref(null); // Holder eventuelle fejlbeskeder
+    // State variabler
+    const planter = ref([]);
+    const isLoading = ref(true);
+    const error = ref(null);
 
-    // Funktion til at hente data fra dit Node.js API
-    const fetchPlanter = async () => {
-      // Dit API kører på http://localhost:3000
-      const apiUrl = 'http://localhost:3000/api/planter'; 
-      
+    // Funktion til at hente data fra API'et
+    const hentPlanter = async () => {
+      // API URL for den offentlige planterute
+      const API_URL = 'http://localhost:3000/api/planter'; 
+      isLoading.value = true;
+      error.value = null; // Nulstil fejl
+
       try {
-        const response = await fetch(apiUrl);
+        const response = await fetch(API_URL);
         
+        // Håndter HTTP-fejl (f.eks. 404 eller 500)
         if (!response.ok) {
-          // Kaster en fejl, hvis HTTP status ikke er 2xx (f.eks. 404 eller 500)
-          throw new Error(`HTTP error! Status: ${response.status}`);
+          throw new Error(`HTTP-fejl: ${response.status} ${response.statusText}`);
         }
         
+        // Pars JSON data
         const data = await response.json();
-        planter.value = data; // Opdaterer den reaktive 'planter' variabel
+        planter.value = data; // Tildel de hentede planter
         
       } catch (err) {
-        console.error("Fejl ved hentning af planter:", err);
-        error.value = 'Kunne ikke hente data fra API. Er serveren startet?';
+        // Håndter netværksfejl (f.eks. serveren er nede, "Failed to fetch")
+        console.error('Fetch fejl:', err.message);
+        error.value = err.message || 'Kunne ikke oprette forbindelse til API\'et.';
+        
       } finally {
-        loading.value = false; // Stop loading, uanset om det lykkedes eller ej
+        // Udføres altid, uanset succes eller fiasko
+        isLoading.value = false;
       }
     };
 
-    // onMounted køres, når komponenten er blevet monteret i DOM'en
-    onMounted(() => {
-      fetchPlanter();
-    });
+    // Kald funktionen, når komponenten er mounted
+    onMounted(hentPlanter);
 
-    // Returner reaktive variabler og metoder til brug i <template>
+    // Returner state og metoder til template
     return {
       planter,
-      loading,
+      isLoading,
       error
     };
   }
-};
+}
 </script>
 
 <style scoped>
-.error {
-  color: red;
-  font-weight: bold;
-}
-.plant-list {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-.plant-item {
-  border: 1px solid #ccc;
-  padding: 15px;
-  border-radius: 8px;
-  width: 250px;
-}
-.plant-item h3 {
-  margin-top: 0;
-  color: #2c3e50;
-}
+/* Tailwind CSS er brugt i template, men du kan tilføje yderligere CSS her */
 </style>

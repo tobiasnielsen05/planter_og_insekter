@@ -1,77 +1,75 @@
-// server/routes/admin.js
-import express from "express";
-import pool from '../../server/db.js';
+import express from 'express';
+// Bemærk: Stien til db.js er rettet til den korrekte relative sti
+import db from '../../server/db.js'; 
 
-const router = express.Router();
+const adminRouter = express.Router();
 
-// I et produktionsmiljø SKAL du indsætte autentificerings-middleware her for at beskytte admin-ruterne.
-// Eksempel: router.use(verifyAdminToken);
+// Tabelnavnet er nu 'plantetabel' overalt for at matche din database.
+const TABLE_NAME = 'plantetabel'; 
 
-// GET (Read All)
-// URL: /api/admin/planter
-router.get("/planter", async (req, res) => {
+// --- 1. HENT ALLE PLANTER (READ ALL for AdminTabel) ---
+adminRouter.get('/', async (req, res) => {
     try {
-        const [rows] = await pool.query("SELECT * FROM planteTabel");
-        res.json(rows);
+        // Henter alle felter fra plantetabel
+        const [results] = await db.query(`SELECT * FROM ${TABLE_NAME} ORDER BY plante_id DESC`);
+        res.json(results);
     } catch (error) {
-        console.error("Fejl ved hentning af planter (ADMIN):", error);
-        res.status(500).json({ error: "Serverfejl: Kunne ikke hente data" });
+        console.error("Fejl ved hentning af planter (Admin):", error);
+        res.status(500).json({ status: 'error', message: 'Kunne ikke hente planter til administrationen.' });
     }
 });
 
-// POST (Create)
-// URL: /api/admin/planter
-router.post("/planter", async (req, res) => {
+// --- 2. OPRET PLANTE (CREATE) ---
+adminRouter.post('/', async (req, res) => {
     const { plante_navn, plante_farve, plante_blomstring, plante_lys } = req.body;
+    if (!plante_navn) {
+        return res.status(400).json({ status: 'error', message: 'Plantenavn er påkrævet.' });
+    }
     
+    // Indsæt i plantetabel
+    const query = `INSERT INTO ${TABLE_NAME} (plante_navn, plante_farve, plante_blomstring, plante_lys) VALUES (?, ?, ?, ?)`;
     try {
-        const [result] = await pool.query(
-            "INSERT INTO planteTabel (plante_navn, plante_farve, plante_blomstring, plante_lys) VALUES (?, ?, ?, ?)",
-            [plante_navn, plante_farve, plante_blomstring, plante_lys]
-        );
-        res.status(201).json({ id: result.insertId, message: "Admin created item" });
+        const [result] = await db.query(query, [plante_navn, plante_farve, plante_blomstring, plante_lys]);
+        res.status(201).json({ status: 'success', message: 'Plante oprettet', plante_id: result.insertId });
     } catch (error) {
-        console.error("Fejl ved oprettelse af item (ADMIN):", error);
-        res.status(500).json({ error: "Serverfejl: Kunne ikke oprette item" });
+        console.error("Fejl ved oprettelse af plante:", error);
+        res.status(500).json({ status: 'error', message: 'Kunne ikke oprette plante.' });
     }
 });
 
-// PUT (Update)
-// URL: /api/admin/planter/:id
-router.put("/planter/:id", async (req, res) => {
-    const { id } = req.params;
+// --- 3. OPDATER PLANTE (UPDATE) ---
+adminRouter.put('/:id', async (req, res) => {
     const { plante_navn, plante_farve, plante_blomstring, plante_lys } = req.body;
+    const plante_id = req.params.id;
     
+    if (!plante_navn || !plante_id) {
+        return res.status(400).json({ status: 'error', message: 'Plantenavn og ID er påkrævet.' });
+    }
+
+    // Opdater plantetabel
+    const query = `UPDATE ${TABLE_NAME} SET plante_navn = ?, plante_farve = ?, plante_blomstring = ?, plante_lys = ? WHERE plante_id = ?`;
     try {
-        const [result] = await pool.query(
-            "UPDATE planteTabel SET plante_navn=?, plante_farve=?, plante_blomstring=?, plante_lys=? WHERE plante_id=?",
-            [plante_navn, plante_farve, plante_blomstring, plante_lys, id]
-        );
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: `Item med ID ${id} ikke fundet` });
-        }
-        res.json({ message: "Admin updated item" });
+        await db.query(query, [plante_navn, plante_farve, plante_blomstring, plante_lys, plante_id]);
+        res.json({ status: 'success', message: 'Plante opdateret' });
     } catch (error) {
-        console.error("Fejl ved opdatering af item (ADMIN):", error);
-        res.status(500).json({ error: "Serverfejl: Kunne ikke opdatere item" });
+        console.error("Fejl ved opdatering af plante:", error);
+        res.status(500).json({ status: 'error', message: 'Kunne ikke opdatere plante.' });
     }
 });
 
-// DELETE
-// URL: /api/admin/planter/:id
-router.delete("/planter/:id", async (req, res) => {
-    const { id } = req.params;
-    
+// --- 4. SLET PLANTE (DELETE) ---
+adminRouter.delete('/:id', async (req, res) => {
+    const plante_id = req.params.id;
+
+    // Slet fra plantetabel
+    const query = `DELETE FROM ${TABLE_NAME} WHERE plante_id = ?`;
     try {
-        const [result] = await pool.query("DELETE FROM planteTabel WHERE plante_id=?", [id]);
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: `Item med ID ${id} ikke fundet til sletning` });
-        }
-        res.json({ message: "Admin deleted item" });
+        await db.query(query, [plante_id]);
+        res.json({ status: 'success', message: 'Plante slettet' });
     } catch (error) {
-        console.error("Fejl ved sletning af item (ADMIN):", error);
-        res.status(500).json({ error: "Serverfejl: Kunne ikke slette item" });
+        console.error("Fejl ved sletning af plante:", error);
+        res.status(500).json({ status: 'error', message: 'Kunne ikke slette plante.' });
     }
 });
 
-export default router;
+export default adminRouter;
