@@ -1,10 +1,7 @@
 import express from 'express';
-// Henter databaseforbindelsen fra server-mappen
 import db from '../../server/db.js'; 
-
 const authRouter = express.Router();
 
-// --- LOGIN ENDPOINT ---
 authRouter.post('/login', async (req, res) => {
     const { mail_admin, pass_admin } = req.body;
 
@@ -21,19 +18,14 @@ authRouter.post('/login', async (req, res) => {
         }
 
         const user = users[0];
-        
-        // Simpel tjek af kodeord (IKKE SIKKERT I PRODUKTION!)
         if (user.pass_admin === pass_admin) {
-            // Success: Returner en sessions-token og brugerdata
             res.json({ 
                 status: 'success', 
                 message: 'Login succesfuldt', 
-                token: `admin-token-${user.admin_id}`, // Simpel token
+                token: `admin-token-${user.admin_id}`,
                 userId: user.admin_id,
                 name: user.name_admin
             });
-
-            // Opdater lastLog_admin
             db.query('UPDATE admin_users SET lastLog_admin = CURRENT_TIMESTAMP WHERE admin_id = ?', [user.admin_id]);
 
         } else {

@@ -1,11 +1,8 @@
-// server/routes/planter.js
 import express from "express";
 import pool from '../../server/db.js';
-
 const router = express.Router();
 
-// GET (Read All) - Hent alle poster
-// URL: /api/planter/
+// GET
 router.get("/", async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM plantetabel");
@@ -16,8 +13,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-// POST (Create) - Opret en ny post
-// URL: /api/planter/
+// POST
 router.post("/", async (req, res) => {
     const { plante_navn, plante_farve, plante_blomstring, plante_lys } = req.body;
     
@@ -41,8 +37,7 @@ router.post("/", async (req, res) => {
     }
 });
 
-// PUT (Update) - Opdater en post
-// URL: /api/planter/:id
+// PUT
 router.put("/:id", async (req, res) => {
     const { id } = req.params;
     const { plante_navn, plante_farve, plante_blomstring, plante_lys } = req.body;
@@ -64,8 +59,7 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-// DELETE - Slet en post
-// URL: /api/planter/:id
+// DELETE
 router.delete("/:id", async (req, res) => {
     const { id } = req.params;
     

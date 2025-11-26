@@ -1,27 +1,20 @@
 import express from 'express';
-// Henter databaseforbindelsen fra server-mappen
 import db from '../../server/db.js'; 
-
 const artikelRouter = express.Router();
-
-// Tabelnavnet for artikler
 const ARTIKEL_TABLE = 'articles';
 
-// --- 1. HENT ALLE ARTIKLER (READ ALL) ---
-// Dette endpoint kaldes af frontend for at vise listen
+// --- 1. HENT ALLE ARTIKLER ---
 artikelRouter.get('/', async (req, res) => {
     try {
-        // Bemærk: Bruger ARTIKEL_TABLE = 'articles'
         const [results] = await db.query(`SELECT * FROM ${ARTIKEL_TABLE} ORDER BY created_at DESC`);
         res.json(results);
     } catch (error) {
         console.error("Fejl ved hentning af artikler:", error);
-        // Sender en 500-fejl, hvis databasen fejler
         res.status(500).json({ status: 'error', message: 'Kunne ikke hente artikler.' });
     }
 });
 
-// --- 2. OPRET ARTIKEL (CREATE) ---
+// --- 2. OPRET ARTIKEL ---
 artikelRouter.post('/', async (req, res) => {
     const { titel, source, indhold, img_link } = req.body;
     if (!titel || !indhold) {
@@ -38,7 +31,7 @@ artikelRouter.post('/', async (req, res) => {
     }
 });
 
-// --- 3. OPDATER ARTIKEL (UPDATE) ---
+// --- 3. OPDATER ARTIKEL ---
 artikelRouter.put('/:id', async (req, res) => {
     const { titel, source, indhold, img_link } = req.body;
     const artikel_id = req.params.id;
@@ -57,7 +50,7 @@ artikelRouter.put('/:id', async (req, res) => {
     }
 });
 
-// --- 4. SLET ARTIKEL (DELETE) ---
+// --- 4. SLET ARTIKEL ---
 artikelRouter.delete('/:id', async (req, res) => {
     const artikel_id = req.params.id;
 

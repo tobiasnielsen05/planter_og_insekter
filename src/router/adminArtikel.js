@@ -1,15 +1,11 @@
 import express from 'express';
 import db from '../../server/db.js'; 
-
 const adminArtikelRouter = express.Router();
-
-// Tabelnavnet for artikler - SKAL MATCHE DIN DATABASE
 const ARTIKEL_TABLE = 'articles';
 
-// --- 1. HENT ALLE ARTIKLER (READ ALL for AdminTabel) ---
+// --- 1. HENT ALLE ARTIKLER ---
 adminArtikelRouter.get('/', async (req, res) => {
     try {
-        // Bemærk: Admin routeren inkluderer nu også GET, så adminTabel kan hente alle.
         const [results] = await db.query(`SELECT * FROM ${ARTIKEL_TABLE} ORDER BY created_at DESC`);
         res.json(results);
     } catch (error) {
@@ -18,7 +14,7 @@ adminArtikelRouter.get('/', async (req, res) => {
     }
 });
 
-// --- 2. OPRET ARTIKEL (CREATE) ---
+// --- 2. OPRET ARTIKEL ---
 adminArtikelRouter.post('/', async (req, res) => {
     const { titel, source, indhold, img_link } = req.body;
     if (!titel || !indhold) {
@@ -34,7 +30,7 @@ adminArtikelRouter.post('/', async (req, res) => {
     }
 });
 
-// --- 3. OPDATER ARTIKEL (UPDATE) ---
+// --- 3. OPDATER ARTIKEL ---
 adminArtikelRouter.put('/:id', async (req, res) => {
     const { titel, source, indhold, img_link } = req.body;
     const artikel_id = req.params.id;
@@ -51,7 +47,7 @@ adminArtikelRouter.put('/:id', async (req, res) => {
     }
 });
 
-// --- 4. SLET ARTIKEL (DELETE) ---
+// --- 4. SLET ARTIKEL ---
 adminArtikelRouter.delete('/:id', async (req, res) => {
     const artikel_id = req.params.id;
     const query = `DELETE FROM ${ARTIKEL_TABLE} WHERE artikel_id = ?`;

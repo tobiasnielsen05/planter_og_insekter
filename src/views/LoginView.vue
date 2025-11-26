@@ -97,12 +97,10 @@ const handleLogin = async () => {
     const result = await response.json();
 
     if (response.ok && result.status === 'success') {
-      // Success: Gem token og naviger til admin-siden
       localStorage.setItem('adminToken', result.token);
-      localStorage.setItem('adminName', result.name); // Gemmer navnet til visning
+      localStorage.setItem('adminName', result.name);
       router.push('/admin');
     } else {
-      // Hvis response.ok er sand, men status er 'fejl' eller lignende
       error.value = result.message || 'Login mislykkedes. Prøv igen.';
     }
 
@@ -117,27 +115,22 @@ const handleLogin = async () => {
 </script>
 
 <style scoped>
-/*
- * SCENARIO: Tailwind CSS klasserne indlæses ikke korrekt.
- * LØSNING: Vi bruger Scoped CSS til at tvinge layout og farver igennem.
- */
-
 /* 1. BAGGRUND & CENTRERING (Fikser vertikal centrering) */
 .login-container {
-    background-color: #ecfdf5; /* Tailwind green-50 */
+    background-color: #ecfdf5;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Sikrer, at vi bruger hele skærmhøjden */
+    min-height: 100vh;
 }
 
 /* 2. KORT STIL (Fikser hvid baggrund, skygge, top border og TILFØJER padding) */
 .login-card {
-    background-color: #ffffff; /* Sætter kortet til hvidt */
-    border-top: 8px solid #059669; /* Tailwind green-600 */
-    border-radius: 1rem; /* Afrundede hjørner */
+    background-color: #ffffff;
+    border-top: 8px solid #059669;
+    border-radius: 1rem;
     padding: 2rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* Stærkere skygge */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     max-width: 400px;
 }
 
@@ -154,21 +147,18 @@ const handleLogin = async () => {
 
 /* 4. LOGO STYLING (Ny sektion for at sikre korrekt visning af billedet) */
 .login-logo-container {
-    /* Centrer containeren */
     margin-left: auto;
     margin-right: auto;
-    /* Giver en max bredde og højde (som den gamle ikon-størrelse) */
-    width: 6rem; /* 96px, lidt større end ikonet for at give plads */
-    height: 6rem; /* 96px */
+    width: 6rem;
+    height: 6rem;
     margin-bottom: 0.75rem; 
     
-    /* Gør baggrunden grøn som før (hvis logoet ikke dækker hele containeren) */
     background-color: #059669; 
-    border-radius: 50%; /* Hvis du vil have en cirkulær baggrund */
-    display: flex; /* Til centrering af selve logo-billedet */
+    border-radius: 50%;
+    display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden; /* Sikrer at logoet forbliver inden for den afrundede form */
+    overflow: hidden;
 }
 
 .login-logo {
@@ -181,39 +171,39 @@ const handleLogin = async () => {
 
 /* 5. INPUT FELTER (Fikser afrunding og padding) */
 .form-group {
-    margin-bottom: 1.5rem; /* space-y-6 */
+    margin-bottom: 1.5rem;
 }
 .form-label {
     display: block;
-    color: #374151; /* gray-700 */
-    font-size: 0.875rem; /* sm */
-    font-weight: 600; /* semibold */
-    margin-bottom: 0.5rem; /* mb-2 */
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
 }
 .form-input {
     width: 100%;
-    padding: 0.75rem 1rem; /* py-3 px-4 */
-    border: 1px solid #d1d5db; /* gray-300 */
-    border-radius: 0.5rem; /* rounded-lg */
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
     outline: none;
     transition: all 0.15s ease-in-out;
-    color: #1f2937; /* gray-800 */
+    color: #1f2937;
 }
 .form-input:focus {
-    border-color: #059669; /* green-600 */
-    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.3); /* focus ring */
+    border-color: #059669;
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.3);
 }
 
 /* 6. KNAP STIL (Fikser farver og padding) */
 .login-button {
-    background-color: #059669; /* Tailwind green-600 */
+    background-color: #059669;
     color: white;
-    padding: 0.75rem 1rem; /* py-3 px-4 */
-    border-radius: 0.5rem; /* rounded-lg */
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
     transition: background-color 0.15s ease-in-out;
 }
 .login-button:hover {
-    background-color: #047857; /* Tailwind green-700 */
+    background-color: #047857;
 }
 .login-button:disabled {
     opacity: 0.5;
@@ -222,8 +212,8 @@ const handleLogin = async () => {
 
 /* 7. FEJL ALERT */
 .error-alert {
-    background-color: #fee2e2; /* red-100 */
-    border: 1px solid #f87171; /* red-400 */
-    color: #b91c1c; /* red-700 */
+    background-color: #fee2e2;
+    border: 1px solid #f87171;
+    color: #b91c1c;
 }
 </style>

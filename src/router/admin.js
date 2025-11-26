@@ -1,16 +1,11 @@
 import express from 'express';
-// Bemærk: Stien til db.js er rettet til den korrekte relative sti
 import db from '../../server/db.js'; 
-
 const adminRouter = express.Router();
-
-// Tabelnavnet er nu 'plantetabel' overalt for at matche din database.
 const TABLE_NAME = 'plantetabel'; 
 
-// --- 1. HENT ALLE PLANTER (READ ALL for AdminTabel) ---
+// --- 1. HENT ALLE PLANTER ---
 adminRouter.get('/', async (req, res) => {
     try {
-        // Henter alle felter fra plantetabel
         const [results] = await db.query(`SELECT * FROM ${TABLE_NAME} ORDER BY plante_id DESC`);
         res.json(results);
     } catch (error) {
@@ -19,14 +14,12 @@ adminRouter.get('/', async (req, res) => {
     }
 });
 
-// --- 2. OPRET PLANTE (CREATE) ---
+// --- 2. OPRET PLANTE ---
 adminRouter.post('/', async (req, res) => {
     const { plante_navn, plante_farve, plante_blomstring, plante_lys } = req.body;
     if (!plante_navn) {
         return res.status(400).json({ status: 'error', message: 'Plantenavn er påkrævet.' });
     }
-    
-    // Indsæt i plantetabel
     const query = `INSERT INTO ${TABLE_NAME} (plante_navn, plante_farve, plante_blomstring, plante_lys) VALUES (?, ?, ?, ?)`;
     try {
         const [result] = await db.query(query, [plante_navn, plante_farve, plante_blomstring, plante_lys]);
@@ -37,7 +30,7 @@ adminRouter.post('/', async (req, res) => {
     }
 });
 
-// --- 3. OPDATER PLANTE (UPDATE) ---
+// --- 3. OPDATER PLANTE---
 adminRouter.put('/:id', async (req, res) => {
     const { plante_navn, plante_farve, plante_blomstring, plante_lys } = req.body;
     const plante_id = req.params.id;
@@ -45,8 +38,6 @@ adminRouter.put('/:id', async (req, res) => {
     if (!plante_navn || !plante_id) {
         return res.status(400).json({ status: 'error', message: 'Plantenavn og ID er påkrævet.' });
     }
-
-    // Opdater plantetabel
     const query = `UPDATE ${TABLE_NAME} SET plante_navn = ?, plante_farve = ?, plante_blomstring = ?, plante_lys = ? WHERE plante_id = ?`;
     try {
         await db.query(query, [plante_navn, plante_farve, plante_blomstring, plante_lys, plante_id]);
@@ -57,11 +48,9 @@ adminRouter.put('/:id', async (req, res) => {
     }
 });
 
-// --- 4. SLET PLANTE (DELETE) ---
+// --- 4. SLET PLANTE ---
 adminRouter.delete('/:id', async (req, res) => {
     const plante_id = req.params.id;
-
-    // Slet fra plantetabel
     const query = `DELETE FROM ${TABLE_NAME} WHERE plante_id = ?`;
     try {
         await db.query(query, [plante_id]);

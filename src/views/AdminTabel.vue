@@ -321,7 +321,7 @@ onMounted(fetchData);
                     <td><a :href="item.img_link" target="_blank" class="link-btn" title="Se Billede">{{ item.img_link ? 'Link' : '-' }}</a></td>
                     <td>{{ formatDate(item.created_at) }}</td>
                 </template>
-                <!-- Handlinger (Fælles) -->
+                <!-- Handlinger -->
                 <td>
                     <button @click="editItem(item)" class="edit-btn">Rediger</button>
                     <button @click="triggerDelete(item[currentIdKey])" class="delete-btn">Slet</button>
@@ -330,12 +330,11 @@ onMounted(fetchData);
         </tbody>
     </table>
     
-    <!-- BEKRÆFTELSES MODAL (CUSTOM) -->
+    <!-- BEKRÆFTELSES MODAL -->
     <div v-if="showConfirm" class="confirmation-modal-overlay">
         <div class="confirmation-modal">
             <p>{{ confirmMessage }}</p>
             <div class="modal-actions">
-                <!-- Kalder den definerede action, og lukker derefter modalen -->
                 <button @click="confirmAction(); closeConfirm()" class="delete-btn">Ja, Slet</button>
                 <button @click="closeConfirm()" class="cancel-btn">Annuller</button>
             </div>
@@ -345,7 +344,6 @@ onMounted(fetchData);
 </template>
 
 <style scoped>
-/* Standard styling for Admin UI */
 .admin-wrapper {
     max-width: 1000px;
     margin: 40px auto;
@@ -355,8 +353,6 @@ onMounted(fetchData);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 .text-center { text-align: center; }
-
-/* Entitetsvælger (Tabs) */
 .entity-selector {
     display: flex;
     justify-content: center;
@@ -389,14 +385,12 @@ onMounted(fetchData);
     margin-bottom: 20px;
     font-weight: 500;
     text-align: center;
-    word-wrap: break-word; /* Sikrer at lange fejlbeskeder ikke overløber */
+    word-wrap: break-word;
 }
 .api-status.error {
     background-color: #ffebee;
     color: #c62828;
 }
-
-/* Form Styling */
 .form-container {
     padding: 25px;
     border: 1px solid #ddd;
@@ -413,7 +407,7 @@ label {
     color: #333;
 }
 input, textarea {
-    width: 100%; /* Sat til 100% for bedre responsivitet */
+    width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -452,20 +446,18 @@ button:disabled {
     cursor: not-allowed;
     box-shadow: none !important;
 }
-
-/* Tabel Styling */
 .admin-table {
     width: 100%;
-    border-collapse: collapse; /* Brug collapse for clean look */
+    border-collapse: collapse;
     margin-top: 20px;
     border-radius: 8px;
-    overflow: hidden; /* Sikrer runde hjørner for hele tabellen */
+    overflow: hidden;
 }
 .admin-table th, .admin-table td {
     padding: 15px;
     text-align: left;
     border-bottom: 1px solid #eee;
-    word-wrap: break-word; /* Sikrer at indhold kan brydes */
+    word-wrap: break-word;
 }
 .admin-table th {
     background-color: #00796b;
@@ -503,8 +495,6 @@ button:disabled {
     display: inline-block;
     padding: 5px 0;
 }
-
-/* Custom Confirmation Modal */
 .confirmation-modal-overlay {
     position: fixed;
     top: 0;
