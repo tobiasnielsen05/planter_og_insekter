@@ -1,8 +1,10 @@
+
 import express from "express";
 import pool from '../../server/db.js';
+
 const router = express.Router();
 
-// GET
+
 router.get("/", async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM plantetabel");
@@ -13,7 +15,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-// POST
+
 router.post("/", async (req, res) => {
     const { plante_navn, plante_farve, plante_blomstring, plante_lys } = req.body;
     
@@ -37,7 +39,6 @@ router.post("/", async (req, res) => {
     }
 });
 
-// PUT
 router.put("/:id", async (req, res) => {
     const { id } = req.params;
     const { plante_navn, plante_farve, plante_blomstring, plante_lys } = req.body;
@@ -59,7 +60,6 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-// DELETE
 router.delete("/:id", async (req, res) => {
     const { id } = req.params;
     

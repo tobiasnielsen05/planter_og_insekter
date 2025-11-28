@@ -1,5 +1,4 @@
 <template>
-    <!-- Disse er statiske elementer, der vises på alle sider -->
     <HeaderTop/>
 
     <nav class="main-nav">
@@ -7,14 +6,11 @@
         <router-link to="/admin">Admin Panel</router-link>
     </nav>
 
-    <!-- !!! HER BLIVER INDHOLDET FRA ROUETEREN INJICERET !!! -->
-    <!-- Hvis stien er '/', viser den HomeView.vue -->
-    <!-- Hvis stien er '/admin', viser den AdminTabel.vue -->
+
     <main class="app-content-wrapper">
         <router-view />
     </main>
     
-    <!-- Denne er også statisk og vises på alle sider -->
     <FooterSection/>
 </template>
 

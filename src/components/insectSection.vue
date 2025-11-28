@@ -37,17 +37,13 @@
                     />
                 </figure>
                 
-                <!-- Kortets indhold (bruger flex-grow for at fylde pladsen) -->
                 <section class="card-inner p-5 flex flex-col flex-grow">
                     <h2 class="card-title text-xl font-bold mb-3 text-gray-800 min-h-[3rem]">{{ artikel.titel }}</h2>
 
-                    <!-- TRUNKERET TEKST: Vises kun hvis "Læs mere" IKKE er aktiv. Bruger flex-grow for at skubbe knappen ned. -->
                     <p v-if="!showMore[artikel.artikel_id]" class="card-text text-gray-600 mb-4 flex-grow">{{ truncateContent(artikel.indhold) }}</p>
 
-                    <!-- Kildevisning -->
                     <p v-if="artikel.source" class="text-sm text-gray-400 italic mb-3 mt-auto flex-shrink-0">Kilde: {{ artikel.source }}</p>
                     
-                    <!-- Vis mere/mindre knap (Baseret på om der er mere indhold) -->
                     <div v-if="artikel.indhold.length > TRUNCATE_LIMIT" class="text-center flex-shrink-0">
                         <button 
                             @click.prevent="toggleShowMore(artikel.artikel_id)" 
@@ -58,10 +54,8 @@
                     </div>
                 </section>
 
-                <!-- UDVIDET SEKTION: Viser HELE indholdet, når "Læs mere" er aktiv -->
                 <transition name="fade">
                     <section v-if="showMore[artikel.artikel_id]" class="more-text p-5 border-t border-gray-200 bg-gray-50 flex-grow overflow-y-auto">
-                        <!-- Her vises det fulde indhold. -->
                         <p class="text-gray-700 whitespace-pre-wrap">{{ artikel.indhold }}</p>
                     </section>
                 </transition>
@@ -74,17 +68,14 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 
-// State til at holde artikler
 const artikler = ref([]);
 const isLoading = ref(true);
 const error = ref(null);
-// State til at styre "Vis mere/mindre" for hver artikel
 const showMore = ref({});
 
 const API_URL = 'http://localhost:3000/api/artikler'; 
 const TRUNCATE_LIMIT = 150; // Max tegn før teksten afkortes
 
-// Funktion til at afkorte indholdet til visning i kortet
 const truncateContent = (content) => {
     if (content.length <= TRUNCATE_LIMIT) {
         return content;
@@ -92,19 +83,15 @@ const truncateContent = (content) => {
     return content.substring(0, TRUNCATE_LIMIT) + '...';
 };
 
-// Funktion til at skifte "Vis mere" state
 const toggleShowMore = (artikelId) => {
     showMore.value[artikelId] = !showMore.value[artikelId];
 };
 
-// Fejlhåndtering for billeder (bruges hvis img_link er brudt)
 const handleImageError = (event) => {
     console.error("Fejl ved indlæsning af billede:", event.target.src);
-    // Erstat med en generisk placeholder, hvis originalen fejler
     event.target.src = 'https://placehold.co/600x400/9CA3AF/ffffff?text=Billede+Fejlet';
 };
 
-// Henter artikler fra API'et
 const fetchArtikler = async () => {
     isLoading.value = true;
     error.value = null;
@@ -116,7 +103,6 @@ const fetchArtikler = async () => {
             throw new Error(`HTTP-fejl: ${response.status} ${response.statusText}`);
         }
         
-        // Data fra databasen forventes at være et array af artikler
         const data = await response.json();
         artikler.value = data;
         
@@ -129,13 +115,11 @@ const fetchArtikler = async () => {
     }
 };
 
-// Kald funktionen, når komponenten er mounted
 onMounted(fetchArtikler);
 
 </script>
 
 <style scoped>
-/* Transition for den udvidede sektion */
 .fade-enter-active, .fade-leave-active {
     transition: opacity 0.5s ease, max-height 0.5s ease-out;
     overflow: hidden;
@@ -148,22 +132,17 @@ onMounted(fetchArtikler);
 
 .fade-enter-to, .fade-leave-from {
     opacity: 1;
-    /* Da kortet nu har en fast højde (450px), skal max-height være stor nok til at vise indholdet */
-    /* Jeg har justeret max-height her, men det er primært kortets faste højde, der sikrer konsistens */
     max-height: 500px; 
 }
 
-/* Base styling for artikler */
 .article-wrapper {
     background-color: #f9fafb;
 }
 
-/* Sikrer, at titlen har en minimumshøjde, så kortene ikke ændrer højde, hvis titlen er kort */
 .card-title {
     min-height: 2.5rem; 
 }
 
-/* Stil for Læs mere/Vis mindre knappen */
 .read-more {
     background-color: transparent !important;
 }

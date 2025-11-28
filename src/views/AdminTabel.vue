@@ -1,11 +1,8 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 
-// Baseret på din Node.js opsætning, antager vi, at du kan route /planter og /artikler
-// BEMÆRK: Opdater URL hvis du deployer til et andet miljø!
 const API_ROOT_URL = 'http://localhost:3000/api/admin';
 
-// Konfiguration for de forskellige entiteter
 const ENTITY_CONFIG = {
     planter: {
         apiPath: 'planter',
@@ -29,38 +26,33 @@ const ENTITY_CONFIG = {
             source: '',
             indhold: '',
             img_link: '',
-            // Sæt default dato til i dag
             created_at: new Date().toISOString().slice(0, 10) 
         }
     }
 };
 
-// Hovedtilstande
-const activeEntity = ref('planter'); // 'planter' eller 'artikler'
-const items = ref([]); // Data for den aktive entitet (planter/artikler)
+const activeEntity = ref('planter');
+const items = ref([]);
 const loading = ref(true);
 const error = ref(null);
 const isEditing = ref(false);
 
-// Formular tilstand
+
 const currentFormItem = ref({ ...ENTITY_CONFIG.planter.defaultState });
 
-// Bekræftelses modal tilstand (erstatter confirm())
+
 const showConfirm = ref(false);
 const confirmMessage = ref('');
-const confirmAction = ref(() => {}); // Funktion der kaldes ved bekræftelse
+const confirmAction = ref(() => {});
 
-// Beregnede værdier for den aktive entitet
+
 const currentConfig = computed(() => ENTITY_CONFIG[activeEntity.value]);
 const currentIdKey = computed(() => currentConfig.value.idKey);
 const apiUrlBase = computed(() => `${API_ROOT_URL}/${currentConfig.value.apiPath}`);
 
-// Hjælpefunktioner
 const formatDate = (dateString) => {
     if (!dateString) return '-';
-    // Sikrer at datoen formatteres korrekt, selvom den kommer som en simpel YYYY-MM-DD streng
     const date = new Date(dateString); 
-    // Sikrer at vi kun viser datoen (ignorerer tidszoner/klokkeslæt)
     return date.toLocaleDateString('da-DK', { year: 'numeric', month: 'short', day: 'numeric' });
 };
 
@@ -71,19 +63,16 @@ const resetForm = () => {
 };
 
 const editItem = (item) => {
-    // Vigtigt: Deep copy, især for artikler med indhold/tekst
     currentFormItem.value = JSON.parse(JSON.stringify(item));
     
-    // Datoformat skal sikres til <input type="date">
     if (activeEntity.value === 'artikler' && currentFormItem.value.created_at) {
-        // Sørg for at datoen er i YYYY-MM-DD format, som HTML input[type=date] forventer
         if (typeof currentFormItem.value.created_at === 'string' && currentFormItem.value.created_at.includes('T')) {
             currentFormItem.value.created_at = currentFormItem.value.created_at.slice(0, 10);
         }
     }
     
     isEditing.value = true;
-    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll op til formularen
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 const switchEntity = (entity) => { 
@@ -93,9 +82,7 @@ const switchEntity = (entity) => {
 };
 
 
-// --- CRUD LOGIK (Generaliseret) ---
 
-// 1. READ (Hent alle)
 const fetchData = async () => {
     loading.value = true;
     error.value = null;
@@ -109,14 +96,12 @@ const fetchData = async () => {
         const data = await response.json();
         items.value = data; 
     } catch (err) {
-        // Tjek for fejlobjektet, som kan have en mere detaljeret besked
         error.value = err.message || `Netværksfejl: Kunne ikke forbinde til ${apiUrlBase.value}`;
     } finally {
         loading.value = false;
     }
 };
 
-// 2. CREATE / UPDATE (Gem)
 const saveItem = async () => {
     loading.value = true;
     error.value = null;
@@ -134,8 +119,6 @@ const saveItem = async () => {
     }
 
     try {
-        // Fjern ID'et fra payloaden, hvis det er en POST (ny oprettelse)
-        // For at sikre, at databasen genererer et nyt ID.
         const payload = { ...currentFormItem.value };
         if (method === 'POST') {
             delete payload[currentIdKey.value];
@@ -148,7 +131,6 @@ const saveItem = async () => {
         });
 
         if (!response.ok) {
-            // Prøv at læse fejlresponsen som JSON eller tekst
             const errorBody = await response.text();
             let errorMessage = `Fejl: ${response.status} ved ${method} - ${errorBody.substring(0, 100)}...`;
             
@@ -156,7 +138,6 @@ const saveItem = async () => {
                 const errorJson = JSON.parse(errorBody);
                 errorMessage = errorJson.message || errorMessage;
             } catch (e) {
-                // Ignore parsing error, use the text message
             }
             throw new Error(errorMessage);
         }
@@ -171,7 +152,6 @@ const saveItem = async () => {
     }
 };
 
-// 3. DELETE (Bekræftelse og sletning)
 const triggerDelete = (id) => {
     const config = currentConfig.value;
     confirmMessage.value = `Er du sikker på du vil slette ${config.title} ID: ${id}?`;
@@ -180,7 +160,7 @@ const triggerDelete = (id) => {
 };
 
 const deleteItem = async (id) => {
-    showConfirm.value = false; // Luk modal
+    showConfirm.value = false;
     loading.value = true;
     error.value = null;
 
@@ -193,7 +173,6 @@ const deleteItem = async (id) => {
             throw new Error(`Sletning fejlede for ${currentConfig.value.title}. Status: ${response.status}`);
         }
         
-        // Hvis vi slettede det element, der blev redigeret, nulstil formularen
         if (isEditing.value && currentFormItem.value[currentIdKey.value] === id) {
             resetForm();
         }
@@ -209,8 +188,6 @@ const deleteItem = async (id) => {
 
 const closeConfirm = () => showConfirm.value = false;
 
-
-// Hent data for den initiale entitet, når komponenten er indlæst
 onMounted(fetchData);
 </script>
 
@@ -321,7 +298,7 @@ onMounted(fetchData);
                     <td><a :href="item.img_link" target="_blank" class="link-btn" title="Se Billede">{{ item.img_link ? 'Link' : '-' }}</a></td>
                     <td>{{ formatDate(item.created_at) }}</td>
                 </template>
-                <!-- Handlinger -->
+                <!-- Handlinger (Fælles) -->
                 <td>
                     <button @click="editItem(item)" class="edit-btn">Rediger</button>
                     <button @click="triggerDelete(item[currentIdKey])" class="delete-btn">Slet</button>
@@ -330,11 +307,12 @@ onMounted(fetchData);
         </tbody>
     </table>
     
-    <!-- BEKRÆFTELSES MODAL -->
+    <!-- BEKRÆFTELSES MODAL (CUSTOM) -->
     <div v-if="showConfirm" class="confirmation-modal-overlay">
         <div class="confirmation-modal">
             <p>{{ confirmMessage }}</p>
             <div class="modal-actions">
+                <!-- Kalder den definerede action, og lukker derefter modalen -->
                 <button @click="confirmAction(); closeConfirm()" class="delete-btn">Ja, Slet</button>
                 <button @click="closeConfirm()" class="cancel-btn">Annuller</button>
             </div>
@@ -344,6 +322,7 @@ onMounted(fetchData);
 </template>
 
 <style scoped>
+/* Standard styling for Admin UI */
 .admin-wrapper {
     max-width: 1000px;
     margin: 40px auto;
@@ -353,6 +332,8 @@ onMounted(fetchData);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 .text-center { text-align: center; }
+
+/* Entitetsvælger (Tabs) */
 .entity-selector {
     display: flex;
     justify-content: center;
@@ -385,12 +366,14 @@ onMounted(fetchData);
     margin-bottom: 20px;
     font-weight: 500;
     text-align: center;
-    word-wrap: break-word;
+    word-wrap: break-word; /* Sikrer at lange fejlbeskeder ikke overløber */
 }
 .api-status.error {
     background-color: #ffebee;
     color: #c62828;
 }
+
+/* Form Styling */
 .form-container {
     padding: 25px;
     border: 1px solid #ddd;
@@ -407,7 +390,7 @@ label {
     color: #333;
 }
 input, textarea {
-    width: 100%;
+    width: 100%; /* Sat til 100% for bedre responsivitet */
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -446,18 +429,20 @@ button:disabled {
     cursor: not-allowed;
     box-shadow: none !important;
 }
+
+/* Tabel Styling */
 .admin-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: collapse; /* Brug collapse for clean look */
     margin-top: 20px;
     border-radius: 8px;
-    overflow: hidden;
+    overflow: hidden; /* Sikrer runde hjørner for hele tabellen */
 }
 .admin-table th, .admin-table td {
     padding: 15px;
     text-align: left;
     border-bottom: 1px solid #eee;
-    word-wrap: break-word;
+    word-wrap: break-word; /* Sikrer at indhold kan brydes */
 }
 .admin-table th {
     background-color: #00796b;
@@ -495,6 +480,8 @@ button:disabled {
     display: inline-block;
     padding: 5px 0;
 }
+
+/* Custom Confirmation Modal */
 .confirmation-modal-overlay {
     position: fixed;
     top: 0;

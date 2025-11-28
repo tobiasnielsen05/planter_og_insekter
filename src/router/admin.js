@@ -1,9 +1,10 @@
 import express from 'express';
 import db from '../../server/db.js'; 
+
 const adminRouter = express.Router();
+
 const TABLE_NAME = 'plantetabel'; 
 
-// --- 1. HENT ALLE PLANTER ---
 adminRouter.get('/', async (req, res) => {
     try {
         const [results] = await db.query(`SELECT * FROM ${TABLE_NAME} ORDER BY plante_id DESC`);
@@ -14,12 +15,12 @@ adminRouter.get('/', async (req, res) => {
     }
 });
 
-// --- 2. OPRET PLANTE ---
 adminRouter.post('/', async (req, res) => {
     const { plante_navn, plante_farve, plante_blomstring, plante_lys } = req.body;
     if (!plante_navn) {
         return res.status(400).json({ status: 'error', message: 'Plantenavn er påkrævet.' });
     }
+    
     const query = `INSERT INTO ${TABLE_NAME} (plante_navn, plante_farve, plante_blomstring, plante_lys) VALUES (?, ?, ?, ?)`;
     try {
         const [result] = await db.query(query, [plante_navn, plante_farve, plante_blomstring, plante_lys]);
@@ -30,7 +31,6 @@ adminRouter.post('/', async (req, res) => {
     }
 });
 
-// --- 3. OPDATER PLANTE---
 adminRouter.put('/:id', async (req, res) => {
     const { plante_navn, plante_farve, plante_blomstring, plante_lys } = req.body;
     const plante_id = req.params.id;
@@ -38,6 +38,7 @@ adminRouter.put('/:id', async (req, res) => {
     if (!plante_navn || !plante_id) {
         return res.status(400).json({ status: 'error', message: 'Plantenavn og ID er påkrævet.' });
     }
+
     const query = `UPDATE ${TABLE_NAME} SET plante_navn = ?, plante_farve = ?, plante_blomstring = ?, plante_lys = ? WHERE plante_id = ?`;
     try {
         await db.query(query, [plante_navn, plante_farve, plante_blomstring, plante_lys, plante_id]);
@@ -48,9 +49,9 @@ adminRouter.put('/:id', async (req, res) => {
     }
 });
 
-// --- 4. SLET PLANTE ---
 adminRouter.delete('/:id', async (req, res) => {
     const plante_id = req.params.id;
+
     const query = `DELETE FROM ${TABLE_NAME} WHERE plante_id = ?`;
     try {
         await db.query(query, [plante_id]);

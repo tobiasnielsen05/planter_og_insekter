@@ -3,20 +3,17 @@
     <h2 class="text-3xl font-bold mb-4 text-green-700">Botanisk Oversigt</h2>
     <p class="mb-8 text-gray-600">En oversigt over udvalgte planters livscyklus, farve, blomstring og lysbehov.</p>
 
-    <!-- Loading State -->
     <div v-if="isLoading" class="text-center py-10">
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto"></div>
       <p class="mt-4 text-green-600">Henter planter fra serveren...</p>
     </div>
 
-    <!-- Error State -->
     <div v-else-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
       <strong class="font-bold">FEJL: Kunne ikke hente planter fra API'et!</strong>
       <p class="block sm:inline">Er serveren startet på port 3000?</p>
       <p class="text-sm mt-2">Detaljer: {{ error }}</p>
     </div>
 
-    <!-- Data Table -->
     <div v-else class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-green-50">
@@ -47,7 +44,6 @@
 </template>
 
 <script>
-// Importer nødvendige funktioner fra Vue
 import { ref, onMounted } from 'vue';
 
 export default {
@@ -58,40 +54,34 @@ export default {
     const isLoading = ref(true);
     const error = ref(null);
 
-    // Funktion til at hente data fra API'et
     const hentPlanter = async () => {
-      // API URL for den offentlige planterute
       const API_URL = 'http://localhost:3000/api/planter'; 
       isLoading.value = true;
-      error.value = null; // Nulstil fejl
+      error.value = null;
 
       try {
         const response = await fetch(API_URL);
         
-        // Håndter HTTP-fejl (f.eks. 404 eller 500)
         if (!response.ok) {
           throw new Error(`HTTP-fejl: ${response.status} ${response.statusText}`);
         }
         
-        // Pars JSON data
         const data = await response.json();
         planter.value = data; // Tildel de hentede planter
         
       } catch (err) {
-        // Håndter netværksfejl (f.eks. serveren er nede, "Failed to fetch")
         console.error('Fetch fejl:', err.message);
         error.value = err.message || 'Kunne ikke oprette forbindelse til API\'et.';
         
       } finally {
-        // Udføres altid, uanset succes eller fiasko
         isLoading.value = false;
       }
     };
 
-    // Kald funktionen, når komponenten er mounted
+  
     onMounted(hentPlanter);
 
-    // Returner state og metoder til template
+
     return {
       planter,
       isLoading,
@@ -102,5 +92,4 @@ export default {
 </script>
 
 <style scoped>
-/* Tailwind CSS er brugt i template, men du kan tilføje yderligere CSS her */
 </style>

@@ -1,5 +1,6 @@
 import express from 'express';
 import db from '../../server/db.js'; 
+
 const authRouter = express.Router();
 
 authRouter.post('/login', async (req, res) => {
@@ -18,14 +19,16 @@ authRouter.post('/login', async (req, res) => {
         }
 
         const user = users[0];
+        
         if (user.pass_admin === pass_admin) {
             res.json({ 
                 status: 'success', 
                 message: 'Login succesfuldt', 
-                token: `admin-token-${user.admin_id}`,
+                token: `admin-token-${user.admin_id}`, // Simpel token
                 userId: user.admin_id,
                 name: user.name_admin
             });
+
             db.query('UPDATE admin_users SET lastLog_admin = CURRENT_TIMESTAMP WHERE admin_id = ?', [user.admin_id]);
 
         } else {

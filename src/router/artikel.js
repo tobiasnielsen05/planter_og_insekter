@@ -1,9 +1,10 @@
 import express from 'express';
 import db from '../../server/db.js'; 
+
 const artikelRouter = express.Router();
+
 const ARTIKEL_TABLE = 'articles';
 
-// --- 1. HENT ALLE ARTIKLER ---
 artikelRouter.get('/', async (req, res) => {
     try {
         const [results] = await db.query(`SELECT * FROM ${ARTIKEL_TABLE} ORDER BY created_at DESC`);
@@ -14,7 +15,6 @@ artikelRouter.get('/', async (req, res) => {
     }
 });
 
-// --- 2. OPRET ARTIKEL ---
 artikelRouter.post('/', async (req, res) => {
     const { titel, source, indhold, img_link } = req.body;
     if (!titel || !indhold) {
@@ -31,7 +31,6 @@ artikelRouter.post('/', async (req, res) => {
     }
 });
 
-// --- 3. OPDATER ARTIKEL ---
 artikelRouter.put('/:id', async (req, res) => {
     const { titel, source, indhold, img_link } = req.body;
     const artikel_id = req.params.id;
@@ -50,7 +49,6 @@ artikelRouter.put('/:id', async (req, res) => {
     }
 });
 
-// --- 4. SLET ARTIKEL ---
 artikelRouter.delete('/:id', async (req, res) => {
     const artikel_id = req.params.id;
 
