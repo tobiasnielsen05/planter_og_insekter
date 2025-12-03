@@ -92,3 +92,20 @@ export default {
     }
 }
 </script>
+
+<style>
+.plant-illustration {
+  display: inline-block; /* Gør det inline med teksten */
+  font-size: 2rem; /* Juster størrelsen som ønsket */
+  line-height: 1; /* Sikrer at størrelsen er ensartet */
+  vertical-align: middle; /* Jævnt med teksten */
+  margin-left: 1rem; /* lidt afstand fra teksten */
+}
+
+/* Skjul illustrationen på meget små skærme */
+@media (max-width: 700px) {
+  .plant-illustration {
+    display: none;
+  }
+}
+</style>

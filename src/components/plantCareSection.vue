@@ -6,61 +6,36 @@
         <p>En oversigt over udvalgte planters livscyklus, farve, blomstring og lysbehov.</p>
     </header>
 
-    <table class="plant-table">
+    <div v-if="loading" class="loading-message">
+        <p>Henter botaniske data...</p>
+    </div>
+    <div v-else-if="error" class="error-message">
+        <p>FEJL: Kunne ikke hente planter fra API'et. Er serveren startet på port 3000?</p>
+        <p>Detaljer: {{ error }}</p>
+    </div>
+    
+    <table v-else class="plant-table">
         <thead class="cM">
             <tr>
                 <th>Navn</th>
-                <th>Livsvarighed</th>
                 <th>Farve</th>
                 <th>Blomstring</th>
                 <th>Lys</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td data-label="Navn">Solsikke</td>
-                <td data-label="Livsvarighed">Étårig</td>
+            <tr v-for="plante in planter" :key="plante.plante_id">
+                
+                <td data-label="Navn">{{ plante.plante_navn }}</td>
+                
                 <td data-label="Farve">
-                    <span class="color-circle" style="background-color: #FBBF24;" title="Gul"></span>
+                    <span class="color-circle" style="background-color: transparent;" :title="plante.plante_farve"></span>
+                    {{ plante.plante_farve }}
                 </td>
-                <td data-label="Blomstring">Jun - Sep</td>
-                <td data-label="Lys">Fuld Sol</td>
-            </tr>
-            <tr>
-                <td data-label="Navn">Lavendel</td>
-                <td data-label="Livsvarighed">Flerårig</td>
-                <td data-label="Farve">
-                    <span class="color-circle" style="background-color: #A78BFA;" title="Violet"></span>
-                </td>
-                <td data-label="Blomstring">Jul - Aug</td>
-                <td data-label="Lys">Meget Sol</td>
-            </tr>
-            <tr>
-                <td data-label="Navn">Bregne</td>
-                <td data-label="Livsvarighed">Flerårig</td>
-                <td data-label="Farve">
-                    <span class="color-circle" style="background-color: #10B981;" title="Grøn"></span>
-                </td>
-                <td data-label="Blomstring">Ingen</td>
-                <td data-label="Lys">Fuld Skygge</td>
-            </tr>
-            <tr>
-                <td data-label="Navn">Tulipan</td>
-                <td data-label="Livsvarighed">Flerårig</td>
-                <td data-label="Farve">
-                    <span class="color-circle" style="background-color: #F87171;" title="Rød"></span>
-                </td>
-                <td data-label="Blomstring">Apr - Maj</td>
-                <td data-label="Lys">Halvskygge</td>
-            </tr>
-            <tr>
-                <td data-label="Navn">Mynte</td>
-                <td data-label="Livsvarighed">Flerårig</td>
-                <td data-label="Farve">
-                    <span class="color-circle" style="background-color: #E5E7EB;" title="Grå/Hvid"></span>
-                </td>
-                <td data-label="Blomstring">Jun - Sep</td>
-                <td data-label="Lys">Sol/Skygge</td>
+                
+                <td data-label="Blomstring">{{ plante.plante_blomstring }}</td>
+                
+                <td data-label="Lys">{{ plante.plante_lys }}</td>
             </tr>
         </tbody>
     </table>
@@ -69,7 +44,59 @@
 
 
 <script>
+import { ref, onMounted } from 'vue';
+
 export default {
     name: 'PlantCareSection',
-}
+    setup() {
+        const planter = ref([]);
+        const loading = ref(true);
+        const error = ref(null);
+
+        const fetchPlanter = async () => {
+            // Dit API kører på http://localhost:3000
+            const apiUrl = 'http://localhost:3000/api/planter'; 
+            
+            try {
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`Fejl ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                planter.value = data; 
+                
+            } catch (err) {
+                console.error("Fejl ved hentning af planter:", err);
+                error.value = err.message || 'Kunne ikke oprette forbindelse til API.';
+            } finally {
+                loading.value = false;
+            }
+        };
+
+        onMounted(() => {
+            fetchPlanter();
+        });
+
+        return {
+            planter,
+            loading,
+            error
+        };
+    }
+};
 </script>
+
+<style scoped>
+.loading-message, .error-message {
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+.error-message {
+    background-color: #fdd;
+    color: #d00;
+    border: 1px solid #d00;
+}
+</style>

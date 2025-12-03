@@ -95,7 +95,6 @@ html, body, #app {
   border-radius: 10px;
   padding: 28px 36px;
   text-align: center;
-  max-width: 92%;
 }
 
 /* mission box near bottom */
@@ -423,8 +422,8 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 .goal-article {
-  background-color: #efefef; /* lys grå baggrund som i vedhæftningen */
-  color: #222; /* mørkere tekst for læsbarhed */
+  background-color: #efefef;
+  color: #222;
   max-width: 820px;
   margin: 18px auto;
   padding: 22px 26px;
@@ -570,7 +569,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 .bottom-partners img {
-  width: 110px;       /* Ens størrelse */
+  width: 110px;
   height: auto;
   object-fit: contain;
   display: block;

@@ -1,40 +1,55 @@
+<template>
+    <HeaderTop/>
+
+    <!-- Accessibility Kontrol placeret over alt indhold for at sikre, at den altid er tilgængelig -->
+    <AccessibilityControls />
+    
+    <nav class="main-nav">
+        <router-link to="/">Forside</router-link> |
+        <router-link to="/admin">Admin Panel</router-link>
+    </nav>
+
+    <main class="app-content-wrapper">
+        <!-- router-view skal være her, da den indlæser selve sidens indhold -->
+        <router-view />
+    </main>
+    
+    <FooterSection/>
+</template>
+
 <script>
-import caruselSection from './components/carusel-section.vue';
-import FaqSection from './components/faq-section.vue';
 import FooterSection from './components/footerSection.vue';
 import HeaderTop from './components/header-Top.vue';
-import HeroSection from './components/hero-section.vue';
-import InsectSection from './components/insectSection.vue';
-import OurGoalSection from './components/ourGoalSection.vue';
-import PlantCareSection from './components/plantCareSection.vue';
+import AccessibilityControls from './components/AccessibilityControls.vue';
 
 export default {
-  name: 'App',
-  components: {
-    caruselSection,
-    FaqSection,
-    FooterSection,
-    HeaderTop,
-    HeroSection,
-    InsectSection,
-    OurGoalSection,
-    PlantCareSection
-  }
+    name: 'App',
+    components: {
+        HeaderTop,
+        FooterSection,
+        AccessibilityControls, // Registreret for brug i template
+    }
 };
 </script>
-
-<template>
-  <HeaderTop/>
-  <HeroSection/>
-  <FaqSection/>
-  <caruselSection/>
-  <InsectSection />
-  <PlantCareSection/>
-  <OurGoalSection />
-  <FooterSection/>
-</template>
 
 <style>
 @import '@/styles/styles.css'; 
 
+
+.main-nav {
+    padding: 15px;
+    background-color: #f0f0f0;
+    text-align: center;
+    border-bottom: 2px solid #ddd;
+}
+.main-nav a {
+    /* Hvis dine styles.css bruger REM eller EM, skaleres denne tekst nu automatisk */
+    font-weight: bold;
+    color: #2c3e50;
+    text-decoration: none;
+    padding: 0 10px;
+}
+.main-nav a.router-link-exact-active {
+    color: #4CAF50; /* Grøn farve for aktiv rute */
+}
 </style>
