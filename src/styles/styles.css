@@ -882,5 +882,11 @@ h1 {
               width: 90%;
             }
         }
+
+select:focus-visible {
+    border: 2px dark blue;
+    border-radius: 5px;
+    outline: none;
+}
         
   

@@ -3,11 +3,6 @@
 
     <!-- Accessibility Kontrol placeret over alt indhold for at sikre, at den altid er tilgængelig -->
     <AccessibilityControls />
-    
-    <nav class="main-nav">
-        <router-link to="/">Forside</router-link> |
-        <router-link to="/admin">Admin Panel</router-link>
-    </nav>
 
     <main class="app-content-wrapper">
         <!-- router-view skal være her, da den indlæser selve sidens indhold -->
@@ -19,13 +14,11 @@
 
 <script>
 import FooterSection from './components/footerSection.vue';
-import HeaderTop from './components/header-Top.vue';
 import AccessibilityControls from './components/AccessibilityControls.vue';
 
 export default {
     name: 'App',
     components: {
-        HeaderTop,
         FooterSection,
         AccessibilityControls, // Registreret for brug i template
     }
