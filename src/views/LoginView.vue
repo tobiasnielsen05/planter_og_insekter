@@ -68,7 +68,7 @@ const error = ref(null);
 const loading = ref(false);
 const router = useRouter();
 
-const API_URL = 'http://localhost:3000/api/auth/login'; 
+const API_URL = 'https://planter-og-insekter.onrender.com/api/auth/login'; 
 
 const handleLogin = async () => {
   loading.value = true;

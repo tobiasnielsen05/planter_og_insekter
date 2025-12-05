@@ -97,7 +97,7 @@ export default {
 
   setup(props, { emit }) {
     const AUTH_TOKEN_KEY = 'adminAuthToken';
-    const ADMIN_API_URL = 'http://localhost:3000/api/admin/artikler';
+    const ADMIN_API_URL = 'https://planter-og-insekter.onrender.com/api/admin/artikler';
 
     const initialFormState = {
       artikel_id: null,

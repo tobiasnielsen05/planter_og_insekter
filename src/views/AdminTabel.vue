@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 
-const API_ROOT_URL = 'http://localhost:3000/api/admin';
+const API_ROOT_URL = 'https://planter-og-insekter.onrender.com/api/admin';
 
 const ENTITY_CONFIG = {
     planter: {

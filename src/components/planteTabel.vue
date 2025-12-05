@@ -55,7 +55,7 @@ export default {
     const error = ref(null);
 
     const hentPlanter = async () => {
-      const API_URL = 'http://localhost:3000/api/planter'; 
+      const API_URL = 'https://planter-og-insekter.onrender.com/api/planter'; 
       isLoading.value = true;
       error.value = null;
 

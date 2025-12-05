@@ -73,7 +73,7 @@ const isLoading = ref(true);
 const error = ref(null);
 const showMore = ref({});
 
-const API_URL = 'http://localhost:3000/api/artikler'; 
+const API_URL = 'https://planter-og-insekter.onrender.com/api/artikler'; 
 const TRUNCATE_LIMIT = 150; // Max tegn før teksten afkortes
 
 const truncateContent = (content) => {
