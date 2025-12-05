@@ -115,7 +115,6 @@ export default {
 
     const isEditMode = computed(() => !!props.artikelData && !!props.artikelData.artikel_id);
 
-
     const closeModal = () => {
       emit('update:isVisible', false);
       setTimeout(() => {
