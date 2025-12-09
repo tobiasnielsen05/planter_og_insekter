@@ -1,10 +1,11 @@
 import mysql from "mysql2/promise";
 
 const pool = mysql.createPool({
-  host: "localhost",
-  user: "root",          // eller dit MySQL login
-  password: "Zea96VuJ!2",          // dit password
-  database: "gronfremtid"  // navnet på den database du oprettede
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  port: process.env.DB_PORT || 3306
 });
 
 export default pool;
